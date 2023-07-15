@@ -10,7 +10,7 @@ public class ParserService : IParserService
         return (delimiters, numbers);
     }
 
-    private List<string> GetDelimitersFromUserInput(string userInput)
+    public List<string> GetDelimitersFromUserInput(string userInput)
     {
         var delimiters = new List<string> { ",", "\n" };
 
@@ -25,7 +25,7 @@ public class ParserService : IParserService
         return delimiters;
     }
 
-    private List<int> GetNumbersFromUserInput(string userInput, List<string> delimiters)
+    public List<int> GetNumbersFromUserInput(string userInput, List<string> delimiters)
     {
         if (userInput.StartsWith("//"))
         {
@@ -34,8 +34,9 @@ public class ParserService : IParserService
         }
 
         var delimitedNumbers = userInput.Split(delimiters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
+        var parsedNumbers = ParseToNumbers(delimitedNumbers.ToList());
 
-        return ParseToNumbers(delimitedNumbers.ToList());
+        return parsedNumbers;
     }
 
     private List<string> GetDelimitersFromFirstLine(string userInputFirstLine)
