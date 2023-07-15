@@ -14,13 +14,15 @@ public class ParserService : IParserService
     {
         var delimiters = new List<string> { ",", "\n" };
 
-        if (userInput.StartsWith("//"))
+        if (!userInput.StartsWith("//"))
         {
-            var userInputFirstLine = userInput.Split('\n').First();
-            var customizedDelimiters = GetDelimitersFromFirstLine(userInputFirstLine);
-
-            delimiters.AddRange(customizedDelimiters);
+            return delimiters;
         }
+
+        var userInputFirstLine = userInput.Split('\n').First();
+        var customizedDelimiters = GetDelimitersFromFirstLine(userInputFirstLine);
+
+        delimiters.AddRange(customizedDelimiters);
 
         return delimiters;
     }
@@ -41,20 +43,21 @@ public class ParserService : IParserService
 
     private List<string> GetDelimitersFromFirstLine(string userInputFirstLine)
     {
-        if (userInputFirstLine.Contains('[') && userInputFirstLine.Contains(']'))
+        if (!userInputFirstLine.Contains('['))
         {
-            var delimiters = userInputFirstLine.Split(
-                new string[] { "[", "]", "//" },
-                StringSplitOptions.RemoveEmptyEntries
-            ).ToList();
+            var length = userInputFirstLine.Length;
+            var singleDelimiter = userInputFirstLine.Substring(2, length - 2);
+            var singleDelimiterList = new List<string> { singleDelimiter };
 
-            return delimiters;
+            return singleDelimiterList;
         }
 
-        var length = userInputFirstLine.Length;
-        var singleDelimiter = userInputFirstLine.Substring(2, length - 2);
+        var delimiters = userInputFirstLine.Split(
+            new string[] { "[", "]", "//" },
+            StringSplitOptions.RemoveEmptyEntries
+        ).ToList();
 
-        return new List<string> { singleDelimiter };
+        return delimiters;
     }
 
     private List<int> ParseToNumbers(List<string> input)

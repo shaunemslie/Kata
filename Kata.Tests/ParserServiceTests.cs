@@ -9,36 +9,59 @@ public class ParserServiceTests
     {
     }
 
-    /* [Test] */
-    /* public void Given_NegativeAndPositiveValues_ReturnsNegatives() */
-    /* { */
-    /*     // Arrange */
-    /*     var sumService = new SumService(); */
-    /*     var values = new List<int> { 0, -1, 2, 2, -3, -3, 4 }; */
-    /*     var expected = new List<int> { -1, -3, -3 }; */
+    [Test]
+    public void Given_UserInput_With_MultipleDelimiters_Returns_DefaultsAndMultipleDelimiters()
+    {
+        // Arrange
+        var parserService = new ParserService();
+        var userInput = "//[#][%][***]";
+        var expected = new List<string> { ",", "\n", "#", "%", "***" };
 
-    /*     // Act */
-    /*     var result = SumService.GetNegatives(values); */
+        // Act
+        var actual = parserService.GetDelimitersFromUserInput(userInput);
 
-    /*     // Assert */
-    /*     Assert.Equals(expected, result); */
-    /*     Assert.Negative(result.Max()); */
-    /*     Assert.Negative(result.Min()); */
-    /* } */
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
 
-    /* [Test] */
-    /* public void Given_ValuesBelowAndAbove_OneThousand_Returns_Below_OneThousandInclusive() */
-    /* { */
-    /*     // Arrange */
-    /*     var sumService = new SumService(); */
-    /*     var values = new List<int> { 0, 1, 1, 2, 1000, 1000, 1001, 1001, 1002 }; */
-    /*     var expected = new List<int> { 0, 1, 1, 2, 1000, 1000 }; */
+    public void Given_UserInput_With_SingleDelimiter_Returns_DefaultsAndSingleDelimiter()
+    {
+        // Arrange
+        var parserService = new ParserService();
+        var userInput = "//***";
+        var expected = new List<string> { ",", "\n", "***" };
 
-    /*     // Act */
-    /*     var result = SumService.GetValidNumbers(values); */
+        // Act
+        var actual = parserService.GetDelimitersFromUserInput(userInput);
 
-    /*     // Assert */
-    /*     Assert.Equals(expected, result); */
-    /*     Assert.LessOrEqual(result.Max(), 1000); */
-    /* } */
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    public void Given_UserInput_Without_Delimiter_Returns_Defaults()
+    {
+        var parserService = new ParserService();
+        var userInput = "1,2,3";
+        var expected = new List<string> { ",", "\n" };
+
+        // Act
+        var actual = parserService.GetDelimitersFromUserInput(userInput);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    public void Given_UserInput_And_DelimiterList_Returns_ParsedNumbers()
+    {
+        var parserService = new ParserService();
+        var userInput = "//***\n1***2***3";
+        var delimiters = new List<string> { ",", "\n", "***", };
+        var expected = new List<int> { 1, 2, 3 };
+
+        // Act
+        var actual = parserService.GetNumbersFromUserInput(userInput, delimiters);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
 }
