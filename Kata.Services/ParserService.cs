@@ -2,15 +2,7 @@ namespace Kata.Services;
 
 public class ParserService : IParserService
 {
-    public (List<string>, List<int>) ParseDelimitersAndNumbers(string userInput)
-    {
-        var delimiters = GetDelimitersFromUserInput(userInput);
-        var numbers = GetNumbersFromUserInput(userInput, delimiters);
-
-        return (delimiters, numbers);
-    }
-
-    private List<string> GetDelimitersFromUserInput(string userInput)
+    public List<string> GetDelimitersFromUserInput(string userInput)
     {
         var delimiters = new List<string> { ",", "\n" };
 
@@ -23,7 +15,7 @@ public class ParserService : IParserService
         return delimiters;
     }
 
-    private List<int> GetNumbersFromUserInput(string userInput, List<string> delimiters)
+    public List<int> GetNumbersFromUserInput(string userInput, List<string> delimiters)
     {
         if (userInput.StartsWith("//"))
         {
@@ -36,6 +28,11 @@ public class ParserService : IParserService
         return ParseToNumbers(delimitedNumbers.ToList());
     }
 
+    public List<int> ParseToNumbers(List<string> input)
+    {
+        return input.Select(int.Parse).ToList();
+    }
+
     private List<string> GetDelimitersFromFirstLine(string userInput)
     {
         var delimiters = userInput.Split(
@@ -44,10 +41,5 @@ public class ParserService : IParserService
         ).ToList();
 
         return delimiters;
-    }
-
-    private List<int> ParseToNumbers(List<string> input)
-    {
-        return input.Select(int.Parse).ToList();
     }
 }

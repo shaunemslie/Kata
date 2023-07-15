@@ -12,26 +12,30 @@ public class Program
         var p = new Program();
         var reader = new StreamReader("TestFile.txt");
         var file = reader.ReadToEnd();
+        var sum = p.Add(file);
 
-        p.Add(file);
+        Console.WriteLine(sum);
     }
 
-    private void Add(string numbers)
+    private int Add(string numbers)
     {
         if (string.IsNullOrEmpty(numbers))
         {
-            Console.WriteLine(0);
-            return;
+            return 0;
         }
 
-        var (delimiters, parsedNumbers) = _parserService.ParseDelimitersAndNumbers(numbers);
-        var (negativeNumbers, validNumbers, sum) = _sumService.GetNegativesAndSum(parsedNumbers);
+        var delimiters = _parserService.GetDelimitersFromUserInput(numbers);
+        var parsedNumbers = _parserService.GetNumbersFromUserInput(numbers, delimiters);
+        var negativeNumbers = _sumService.GetNegatives(parsedNumbers);
 
         if (negativeNumbers.Any())
         {
             throw new Exception($"Negatives not allowed: {string.Join(',', negativeNumbers)}");
         }
 
-        Console.WriteLine(sum);
+        var validNumbers = _sumService.GetValidNumbers(parsedNumbers);
+        var sum = _sumService.Sum(parsedNumbers);
+
+        return sum;
     }
 }
