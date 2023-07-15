@@ -8,7 +8,9 @@ public class ParserService : IParserService
 
         if (userInput.StartsWith("//"))
         {
-            var customizedDelimiters = GetDelimitersFromFirstLine(userInput);
+            var userInputFirstLine = userInput.Split('\n').First();
+            var customizedDelimiters = GetDelimitersFromFirstLine(userInputFirstLine);
+
             delimiters.AddRange(customizedDelimiters);
         }
 
@@ -33,13 +35,21 @@ public class ParserService : IParserService
         return input.Select(int.Parse).ToList();
     }
 
-    private List<string> GetDelimitersFromFirstLine(string userInput)
+    private List<string> GetDelimitersFromFirstLine(string userInputFirstLine)
     {
-        var delimiters = userInput.Split(
-            new string[] { "[", "]", "//" },
-            StringSplitOptions.RemoveEmptyEntries
-        ).ToList();
+        if (userInputFirstLine.Contains('[') && userInputFirstLine.Contains(']'))
+        {
+            var delimiters = userInputFirstLine.Split(
+                new string[] { "[", "]", "//" },
+                StringSplitOptions.RemoveEmptyEntries
+            ).ToList();
 
-        return delimiters;
+            return delimiters;
+        }
+
+        var length = userInputFirstLine.Length;
+        var singleDelimiter = userInputFirstLine.Substring(2, length - 2);
+
+        return new List<string> { singleDelimiter };
     }
 }
