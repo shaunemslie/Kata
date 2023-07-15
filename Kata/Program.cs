@@ -34,7 +34,7 @@ public class Program
         }
 
         var validNumbers = _sumService.GetValidNumbers(parsedNumbers);
-        var sum = _sumService.Sum(parsedNumbers);
+        var sum = _sumService.Sum(validNumbers);
 
         return sum;
     }
