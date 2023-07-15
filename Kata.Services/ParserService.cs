@@ -38,7 +38,7 @@ public class ParserService : IParserService
         return ParseToNumbers(delimitedNumbers.ToList());
     }
 
-    private List<string> GetDelimitersFromFirstLine(string userInput)
+    private List<string> GetDelimitersFromFirstLine(string userInputFirstLine)
     {
         if (userInputFirstLine.Contains('[') && userInputFirstLine.Contains(']'))
         {
