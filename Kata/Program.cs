@@ -4,15 +4,12 @@ namespace Kata;
 
 public class Program
 {
-    private IParserService? _parserService;
-    private ISumService? _sumService;
+    private readonly IParserService _parserService = new ParserService();
+    private readonly ISumService _sumService = new SumService();
 
     public static void Main(string[] args)
     {
         var p = new Program();
-        IParserService _parserService = new ParserService();
-        ISumService _sumService = new SumService();
-
         var reader = new StreamReader("TestFile.txt");
         var file = reader.ReadToEnd();
         var sum = p.Add(file);
@@ -27,8 +24,8 @@ public class Program
             return 0;
         }
 
-        var (delimiters, parsedNumbers) = _parserService!.ParseDelimitersAndNumbers(numbers);
-        var (negativeNumbers, validNumbers) = _sumService!.GetNegativesAndValidNumbers(parsedNumbers);
+        var (delimiters, parsedNumbers) = _parserService.ParseDelimitersAndNumbers(numbers);
+        var (negativeNumbers, validNumbers) = _sumService.GetNegativesAndValidNumbers(parsedNumbers);
 
         if (negativeNumbers.Any())
         {

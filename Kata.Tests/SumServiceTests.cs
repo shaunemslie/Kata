@@ -4,13 +4,7 @@ namespace Kata.Tests;
 
 public class SumServiceTests
 {
-    private ISumService? _sumService;
-
-    [SetUp]
-    public void Setup()
-    {
-        ISumService _sumService = new SumService();
-    }
+    private readonly ISumService _sumService = new SumService();
 
     [Test]
     public void Given_NegativeAndPositiveValues_Returns_NegativesExclusive()
@@ -20,7 +14,7 @@ public class SumServiceTests
         var expected = new List<int> { -1, -3, -3 }; // Could probably remove this
 
         // Act
-        var actual = _sumService!.GetNegatives(values);
+        var actual = _sumService.GetNegatives(values);
 
         // Assert
         Assert.That(actual, Is.EqualTo(expected)); // Could probably remove this
@@ -35,7 +29,7 @@ public class SumServiceTests
         var values = new List<int> { 0, 1, 2, 2, 3, 4 };
 
         // Act
-        var actual = _sumService!.GetNegatives(values);
+        var actual = _sumService.GetNegatives(values);
 
         // Assert
         Assert.That(actual, Is.Empty);
@@ -49,7 +43,7 @@ public class SumServiceTests
         var expected = new List<int> { 0, 1, 1, 2, 1000, 1000 }; // Could probably remove this
 
         // Act
-        var actual = _sumService!.GetValidNumbers(values);
+        var actual = _sumService.GetValidNumbers(values);
 
         // Assert
         Assert.That(actual, Is.EqualTo(expected)); // Could probably remove this
