@@ -20,6 +20,7 @@ public class ParserServiceTests
         Assert.That(actual, Is.EqualTo(expected));
     }
 
+    [Test]
     public void Given_UserInput_With_SingleDelimiter_Returns_DefaultsAndSingleDelimiter()
     {
         // Arrange
@@ -33,6 +34,7 @@ public class ParserServiceTests
         Assert.That(actual, Is.EqualTo(expected));
     }
 
+    [Test]
     public void Given_UserInput_Without_Delimiter_Returns_Defaults()
     {
         var userInput = "1,2,3";
@@ -45,6 +47,7 @@ public class ParserServiceTests
         Assert.That(actual, Is.EqualTo(expected));
     }
 
+    [Test]
     public void Given_UserInput_And_DelimiterList_Returns_ParsedNumbers()
     {
         var userInput = "//***\n1***2***3";
