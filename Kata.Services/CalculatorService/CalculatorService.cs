@@ -2,11 +2,11 @@ namespace Kata.Services;
 
 public class CalculatorService : ICalculatorService
 {
-    private readonly IReaderService _readerService;
+    private IReaderService _readerService;
 
-    public CalculatorService(IReaderService readerService)
+    public CalculatorService()
     {
-        _readerService = readerService;
+        _readerService = new ReaderService();
     }
 
     public int Add(string numbers)
@@ -18,8 +18,10 @@ public class CalculatorService : ICalculatorService
 
         var parsedNumbers = _readerService.GetParsedNumbersFromInput(numbers);
         var validNumbers = GetValidatedNumbers(parsedNumbers);
+        var sum = validNumbers.Sum();
 
-        return validNumbers.Sum();
+        Console.WriteLine(sum);
+        return sum;
     }
 
     private IEnumerable<int> GetValidatedNumbers(IEnumerable<int> numbers)

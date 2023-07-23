@@ -5,13 +5,37 @@ public class ReaderService : IReaderService
     public IEnumerable<int> GetParsedNumbersFromInput(string input)
     {
         var reader = new StringReader(input);
-        var delimiters = GetDefaultAndExtractedDelimiters(reader.ReadLine());
+        var delimiters = new List<string> { ",", "\n" };
+
+        if (input.StartsWith("//"))
+        {
+            var extractedDelimiters = GetExtractedDelimiters(reader.ReadLine());
+            delimiters.AddRange(extractedDelimiters);
+        }
+
         var numbers = GetExtractedAndParsedNumbers(reader.ReadToEnd(), delimiters);
 
         return numbers;
     }
 
-    private IEnumerable<int> GetExtractedAndParsedNumbers(string input, IEnumerable<string> delimiters)
+    private IEnumerable<string> GetExtractedDelimiters(string delimiterLine)
+    {
+        var delimiterLineLessPrefix = delimiterLine.Replace("//", string.Empty);
+
+        if (!delimiterLineLessPrefix.Contains("["))
+        {
+            return new[] { delimiterLineLessPrefix };
+        }
+
+        var delimiters = delimiterLineLessPrefix.Split(
+            new[] { "[", "]" },
+            StringSplitOptions.RemoveEmptyEntries
+        );
+
+        return delimiters;
+    }
+
+    private IEnumerable<int> GetExtractedAndParsedNumbers(string input, List<string> delimiters)
     {
         var numbers = input.Split(
             delimiters.ToArray(),
@@ -19,31 +43,5 @@ public class ReaderService : IReaderService
         );
 
         return numbers.Select(int.Parse);
-    }
-
-    private IEnumerable<string> GetDefaultAndExtractedDelimiters(string delimiterLine)
-    {
-        var defaultDelimiters = new List<string> { ",", "\n" };
-
-        if (string.IsNullOrWhiteSpace(delimiterLine) || !delimiterLine.StartsWith("//"))
-        {
-            return defaultDelimiters;
-        }
-
-        var extractedDelimiters = ExtractDelimiters(delimiterLine);
-        var delimiters = defaultDelimiters.Concat(extractedDelimiters);
-
-        return delimiters;
-    }
-
-    private IEnumerable<string> ExtractDelimiters(string delimiterLine)
-    {
-        delimiterLine = delimiterLine.Replace("//", string.Empty);
-        var delimiters = delimiterLine.Split(
-            new[] { "[", "]" },
-            StringSplitOptions.RemoveEmptyEntries
-        );
-
-        return delimiters;
     }
 }
