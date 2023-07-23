@@ -1,8 +1,8 @@
 namespace Kata.Tests;
 
-public class ParserServiceTests
+public class ReaderServiceTests
 {
-    private IParserService _parserService;
+    private IReaderService _readerService;
 
     [SetUp]
     public void Setup()

@@ -1,6 +1,6 @@
 namespace Kata.Services
 {
-    public interface IParserService
+    public interface IReaderService
     {
         IEnumerable<int> GetParsedNumbersFromInput(string input);
     }
