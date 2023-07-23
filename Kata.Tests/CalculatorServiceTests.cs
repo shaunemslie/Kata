@@ -156,7 +156,7 @@ public class CalculatorServiceTests
     public class FailureTests
     {
         [Test]
-        public void Add_GivenInputWithNegative_WhenPassedTwoDelimitedNumbers_ThrowsNegativesNotAllowed()
+        public void Add_GivenInputWithANegativeNumber_WhenPassedTwoDelimitedNumbers_ThrowsNegativesNotAllowed()
         {
             // Arrange
             var _calculatorService = new CalculatorService();

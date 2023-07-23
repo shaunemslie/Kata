@@ -13,6 +13,7 @@ public class CalculatorService : ICalculatorService
     {
         if (string.IsNullOrWhiteSpace(numbers))
         {
+            Console.WriteLine(0);
             return 0;
         }
 
