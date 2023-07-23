@@ -7,14 +7,14 @@ public class ParserServiceTests
     private IParserService _parserService = new ParserService();
 
     [Test]
-    public void Given_UserInput_With_MultipleDelimiters_Returns_DefaultsAndMultipleDelimiters()
+    public void GetDelimitersFromUserInput_GivenMultipleDelimiters_ReturnsDefaultsAndExtractedDelimiters()
     {
         // Arrange
         var userInput = "//[#][%][***]";
         var expected = new List<string> { ",", "\n", "#", "%", "***" };
 
         // Act
-        var actual = _parserService.GetDelimitersFromUserInput(userInput);
+        var actual = _parserService.GetDelimitersFromUserInput(userInput, true);
 
         // Assert
         Assert.That(actual, Is.EqualTo(expected));

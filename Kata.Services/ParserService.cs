@@ -4,32 +4,30 @@ public class ParserService : IParserService
 {
     public (List<string>, List<int>) ParseDelimitersAndNumbers(string userInput)
     {
-        var delimiters = GetDelimitersFromUserInput(userInput);
-        var numbers = GetNumbersFromUserInput(userInput, delimiters);
+        var hasDelimiters = userInput.StartsWith("//");
+        var delimiters = GetDelimitersFromUserInput(userInput, hasDelimiters);
+        var numbers = GetNumbersFromUserInput(userInput, delimiters, hasDelimiters);
 
         return (delimiters, numbers);
     }
 
-    public List<string> GetDelimitersFromUserInput(string userInput)
+    public List<string> GetDelimitersFromUserInput(string userInput, bool hasDelimiters)
     {
         var delimiters = new List<string> { ",", "\n" };
 
-        if (!userInput.StartsWith("//"))
+        if (hasDelimiters)
         {
-            return delimiters;
+            var userInputFirstLine = userInput.Split('\n').First();
+            var customizedDelimiters = GetDelimitersFromFirstLine(userInputFirstLine);
+            delimiters.AddRange(customizedDelimiters);
         }
-
-        var userInputFirstLine = userInput.Split('\n').First();
-        var customizedDelimiters = GetDelimitersFromFirstLine(userInputFirstLine);
-
-        delimiters.AddRange(customizedDelimiters);
 
         return delimiters;
     }
 
-    public List<int> GetNumbersFromUserInput(string userInput, List<string> delimiters)
+    public List<int> GetNumbersFromUserInput(string userInput, List<string> delimiters, bool hasDelimiters)
     {
-        if (userInput.StartsWith("//"))
+        if (hasDelimiters)
         {
             var userInputLines = userInput.Split('\n');
             userInput = string.Join(',', userInputLines.Skip(1));
