@@ -25,6 +25,14 @@ public class CalculatorService : ICalculatorService
 
     private IEnumerable<int> GetValidatedNumbers(IEnumerable<int> numbers)
     {
+        var negativeNumbers = numbers.Where(x => x < 0);
+
+        if (negativeNumbers.Any())
+        {
+            var negativeNumbersList = string.Join(",", negativeNumbers);
+            throw new Exception($"Negatives not allowed: {negativeNumbersList}");
+        }
+
         return numbers.Where(x => x <= 1000);
     }
 }
