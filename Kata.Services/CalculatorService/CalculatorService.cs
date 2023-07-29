@@ -16,9 +16,11 @@ public class CalculatorService : ICalculatorService
             return 0;
         }
 
-        if (isSingleNumber(numbers))
+        var (isSingleNumber, parsedNumber) = GetCheckedIsAndParsedSingleNumber(numbers);
+
+        if (isSingleNumber)
         {
-            return int.Parse(numbers);
+            return parsedNumber;
         }
 
         var parsedNumbers = _readerService.GetParsedNumbersFromInput(numbers);
@@ -49,12 +51,18 @@ public class CalculatorService : ICalculatorService
         throw new Exception(exceptionMessage);
     }
 
-    private bool isSingleNumber(string input)
+    private (bool, int) GetCheckedIsAndParsedSingleNumber(string input)
     {
-        if (input.Trim().Length == 1)
+        var inputLessWhitespace = input.Trim();
+
+        if (inputLessWhitespace.Length != 1)
         {
-            return int.TryParse(input.Trim(), out _);
+            return (false, 0);
         }
-        return false;
+
+        var parsedNumber = 0;
+        var isNumber = int.TryParse(inputLessWhitespace, out parsedNumber);
+
+        return (isNumber, parsedNumber);
     }
 }
