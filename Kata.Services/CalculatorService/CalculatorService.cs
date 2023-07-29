@@ -23,17 +23,23 @@ public class CalculatorService : ICalculatorService
         return sum;
     }
 
-    private IEnumerable<int> GetValidatedNumbers(IEnumerable<int> numbers)
+    private IEnumerable<int> GetValidatedNumbers
+    (
+        IEnumerable<int> numbersToCheck,
+        int lowerLimitThrows = 0,
+        int upperLimitInclusive = 1000
+    )
     {
-        var negativeNumbers = numbers.Where(x => x < 0);
+        var belowLowerLimit = numbersToCheck.Where(x => x < lowerLimitThrows);
 
-        if (!negativeNumbers.Any())
+        if (!belowLowerLimit.Any())
         {
-            return numbers.Where(x => x <= 1000);
+            var belowUpperLimitInclusive = numbersToCheck.Where(x => x <= upperLimitInclusive);
+            return belowUpperLimitInclusive;
         }
 
-        var negativeNumbersList = string.Join(',', negativeNumbers);
-        var exceptionMessage = $"Negatives not allowed: {negativeNumbersList}";
+        var exceptionList = string.Join(',', belowLowerLimit);
+        var exceptionMessage = $"Negatives not allowed: {exceptionList}";
 
         throw new Exception(exceptionMessage);
     }
