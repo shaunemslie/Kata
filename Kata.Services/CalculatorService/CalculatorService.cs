@@ -16,6 +16,11 @@ public class CalculatorService : ICalculatorService
             return 0;
         }
 
+        if (isSingleNumber(numbers))
+        {
+            return int.Parse(numbers);
+        }
+
         var parsedNumbers = _readerService.GetParsedNumbersFromInput(numbers);
         var validNumbers = GetValidatedNumbers(parsedNumbers);
         var sum = validNumbers.Sum();
@@ -42,5 +47,14 @@ public class CalculatorService : ICalculatorService
         var exceptionMessage = $"Negatives not allowed: {exceptionList}";
 
         throw new Exception(exceptionMessage);
+    }
+
+    private bool isSingleNumber(string input)
+    {
+        if (input.Trim().Length == 1)
+        {
+            return int.TryParse(input.Trim(), out _);
+        }
+        return false;
     }
 }

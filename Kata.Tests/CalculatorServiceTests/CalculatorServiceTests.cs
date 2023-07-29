@@ -25,14 +25,11 @@ public class CalculatorServiceTests
         Assert.That(actual, Is.Zero);
     }
 
-    // TODO: Refactor Add method ->
-    // Check for a single character and whether it's a number or not.
-    // If it's not a number, continue, otherwise return parsed number.
     [Test]
-    public void GIVEN_InputWithOneNumber_WHEN_Adding_RETURNS_ParsedNumber()
+    public void GIVEN_InputWithOneNumberAndWhitespace_WHEN_Adding_RETURNS_ParsedNumber()
     {
         // Arrange
-        var input = "1";
+        var input = " 1  ";
         var expected = 1;
 
         // Act
@@ -73,8 +70,7 @@ public class CalculatorServiceTests
     // TODO: Refactor Calculator class ->
     // Could perhaps create a wrapper for the GetValidatedNumbersMethod to
     // improve testability and readability (allows me to use the Is.LessThanOrEqualTo
-    // assertion which read better than the below equalTo. and conveys more meaning)
-    // See below brainstorm test.
+    // assertion which read better than the below equalTo.)
     [Test]
     public void GIVEN_NumbersAbove1000_WHEN_Adding_RETURNS_SumOfNumbersLessThanOrEqualTo1000()
     {
