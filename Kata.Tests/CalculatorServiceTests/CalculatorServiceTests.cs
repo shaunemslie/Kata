@@ -107,7 +107,7 @@ public class CalculatorServiceTests
             .Returns(new List<int> { -1, 2, -3, 4 });
 
         // Act & Assert
-        // NOTE: Found this on the NUnit docs, see below note (brainstorm) to maybe separate the assertion?
+        // NOTE: Found this on the NUnit docs, see below (brainstorm) to maybe separate the assertion?
         Assert.Throws(
             Is.TypeOf<Exception>()
             .And.Message.EqualTo(expectedExceptionMessage),
@@ -115,48 +115,47 @@ public class CalculatorServiceTests
         );
     }
 
-    // just commented this out, separation isn't that cool lol, get too excited sometimes
-    //
-/*     [Test] */
-/*     public void GIVEN_NumbersWithNegativeValues_WHEN_Adding_THROWS_NegativesNotAllowedException_BRAINSTORM_TEST() */
-/*     { */
-/*         // Arrange */
-/*         var input = "-1,2,-3,4"; */
-/*         var expectedExceptionMessage = "Negatives not allowed: -1,-3"; */
+    // NOTE: Brainstorm tests, ignore for now
+    [Test]
+    [Ignore("Ignore: brainstorm")]
+    public void GIVEN_NumbersWithNegativeValues_WHEN_Adding_THROWS_NegativesNotAllowedException_BRAINSTORM_TEST()
+    {
+        // Arrange
+        var input = "-1,2,-3,4";
+        var expectedExceptionMessage = "Negatives not allowed: -1,-3";
 
-/*         _readerServiceMock */
-/*             .GetParsedNumbersFromInput(Arg.Any<string>()) */
-/*             .Returns(new List<int> { -1, 2, -3, 4 }); */
+        _readerServiceMock
+            .GetParsedNumbersFromInput(Arg.Any<string>())
+            .Returns(new List<int> { -1, 2, -3, 4 });
 
-/*         // Act */
-/*         // NOTE:(brainstorm) */
-/*         var actual = () => _calculatorService.Add(input); */
+        // Act
+        var actual = () => _calculatorService.Add(input);
 
-/*         // Assert */
-/*         var exception = Assert.Throws( */
-/*             Is.TypeOf<Exception>(), */
-/*             () => actual.Invoke() */
-/*         ); */
-/*         Assert.That(exception.Message, Is.EqualTo(expectedExceptionMessage)); */
-/*     } */
+        // Assert
+        var exception = Assert.Throws(
+            Is.TypeOf<Exception>(),
+            () => actual.Invoke()
+        );
+        Assert.That(exception.Message, Is.EqualTo(expectedExceptionMessage));
+    }
 
-/*     [Test] */
-/*     public void GIVEN_NumbersWithNegativeValues_WHEN_Adding_THROWS_NegativesNotAllowedException_BRAINSTORM_TEST_TWO() */
-/*     { */
-/*         // Arrange */
-/*         var input = "-1,2,-3,4"; */
-/*         var expectedExceptionMessage = "Negatives not allowed: -1,-3"; */
+    [Test]
+    [Ignore("Ignore: brainstorm")]
+    public void GIVEN_NumbersWithNegativeValues_WHEN_Adding_THROWS_NegativesNotAllowedException_BRAINSTORM_TEST_TWO()
+    {
+        // Arrange
+        var input = "-1,2,-3,4";
+        var expectedExceptionMessage = "Negatives not allowed: -1,-3";
 
-/*         _readerServiceMock */
-/*             .GetParsedNumbersFromInput(Arg.Any<string>()) */
-/*             .Returns(new List<int> { -1, 2, -3, 4 }); */
+        _readerServiceMock
+            .GetParsedNumbersFromInput(Arg.Any<string>())
+            .Returns(new List<int> { -1, 2, -3, 4 });
 
-/*         // Act */
-/*         var actual = () => _calculatorService.Add(input); */
+        // Act
+        var actual = () => _calculatorService.Add(input);
 
-/*         // Assert */
-/*         // NOTE: you can extract the IsTypeOf arg/assertion to the assert method return type?!?! whattttt, so cool */
-/*         var exception = Assert.Throws<Exception>(() => actual.Invoke()); */
-/*         Assert.That(exception.Message, Is.EqualTo(expectedExceptionMessage)); */
-/*     } */
+        // Assert
+        var exception = Assert.Throws<Exception>(() => actual.Invoke());
+        Assert.That(exception.Message, Is.EqualTo(expectedExceptionMessage));
+    }
 }

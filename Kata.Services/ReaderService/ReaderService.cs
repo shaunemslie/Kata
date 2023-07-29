@@ -23,7 +23,7 @@ public class ReaderService : IReaderService
 
     private IEnumerable<string> GetExtractedDelimiters(string delimiterLine)
     {
-        var delimiterLineLessPrefix = delimiterLine.Replace("//", string.Empty);
+        var delimiterLineLessPrefix = delimiterLine.Substring(2);
 
         if (!delimiterLineLessPrefix.Contains('['))
         {
