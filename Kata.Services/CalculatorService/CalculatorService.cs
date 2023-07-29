@@ -11,19 +11,21 @@ public class CalculatorService : ICalculatorService
 
     public int Add(string numbers)
     {
-        if (string.IsNullOrWhiteSpace(numbers))
+        var numbersLessWhitespace = numbers.Trim();
+
+        if (string.IsNullOrEmpty(numbersLessWhitespace))
         {
             return 0;
         }
 
-        var (isSingleNumber, parsedNumber) = GetCheckedIsAndParsedSingleNumber(numbers);
+        var (isSingleNumber, parsedNumber) = GetCheckedIsAndParsedSingleNumber(numbersLessWhitespace);
 
         if (isSingleNumber)
         {
             return parsedNumber;
         }
 
-        var parsedNumbers = _readerService.GetParsedNumbersFromInput(numbers);
+        var parsedNumbers = _readerService.GetParsedNumbersFromInput(numbersLessWhitespace);
         var validNumbers = GetValidatedNumbers(parsedNumbers);
         var sum = validNumbers.Sum();
 
@@ -53,15 +55,13 @@ public class CalculatorService : ICalculatorService
 
     private (bool, int) GetCheckedIsAndParsedSingleNumber(string input)
     {
-        var inputLessWhitespace = input.Trim();
-
-        if (inputLessWhitespace.Length != 1)
+        if (input.Length != 1)
         {
             return (false, 0);
         }
 
         var parsedNumber = 0;
-        var isNumber = int.TryParse(inputLessWhitespace, out parsedNumber);
+        var isNumber = int.TryParse(input, out parsedNumber);
 
         return (isNumber, parsedNumber);
     }
