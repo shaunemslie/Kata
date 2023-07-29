@@ -90,25 +90,6 @@ public class CalculatorServiceTests
     }
 
     [Test]
-    [Ignore("Ignore: brainstorm")]
-    public void GIVEN_NumbersAbove1000_WHEN_Adding_RETURNS_SumOfNumbersLessThanOrEqualTo1000_BRAINSTORM()
-    {
-        // Arrange
-        var input = "1000,1001";
-        var expectedEqualToOrLessThan = 1000;
-
-        _readerServiceMock
-            .GetParsedNumbersFromInput(Arg.Any<string>())
-            .Returns(new List<int> { 1000, 1001 });
-
-        // Act
-        var actual = _calculatorService.Add(input);
-
-        // Assert
-        Assert.That(actual, Is.LessThanOrEqualTo(expectedEqualToOrLessThan));
-    }
-
-    [Test]
     public void GIVEN_NumbersWithNegativeValues_WHEN_Adding_THROWS_NegativesNotAllowedException()
     {
         // Arrange
@@ -128,7 +109,25 @@ public class CalculatorServiceTests
         );
     }
 
-    // NOTE: Brainstorm tests, ignore for now
+    [Test]
+    [Ignore("Ignore: brainstorm")]
+    public void GIVEN_NumbersAbove1000_WHEN_Adding_RETURNS_SumOfNumbersLessThanOrEqualTo1000_BRAINSTORM()
+    {
+        // Arrange
+        var input = "1000,1001";
+        var expectedEqualToOrLessThan = 1000;
+
+        _readerServiceMock
+            .GetParsedNumbersFromInput(Arg.Any<string>())
+            .Returns(new List<int> { 1000, 1001 });
+
+        // Act
+        var actual = _calculatorService.Add(input);
+
+        // Assert
+        Assert.That(actual, Is.LessThanOrEqualTo(expectedEqualToOrLessThan));
+    }
+
     [Test]
     [Ignore("Ignore: brainstorm")]
     public void GIVEN_NumbersWithNegativeValues_WHEN_Adding_THROWS_NegativesNotAllowedException_BRAINSTORM_TEST()
