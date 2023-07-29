@@ -29,8 +29,8 @@ public class CalculatorServiceTests
     public void GIVEN_InputWithOneNumberAndWhitespace_WHEN_Adding_RETURNS_ParsedNumber()
     {
         // Arrange
-        var input = " 1  ";
-        var expected = 1;
+        var input = " 12  ";
+        var expected = 12;
 
         // Act
         var actual = _calculatorService.Add(input);
