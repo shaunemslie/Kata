@@ -27,12 +27,14 @@ public class CalculatorService : ICalculatorService
     {
         var negativeNumbers = numbers.Where(x => x < 0);
 
-        if (negativeNumbers.Any())
+        if (!negativeNumbers.Any())
         {
-            var negativeNumbersList = string.Join(",", negativeNumbers);
-            throw new Exception($"Negatives not allowed: {negativeNumbersList}");
+            return numbers.Where(x => x <= 1000);
         }
 
-        return numbers.Where(x => x <= 1000);
+        var negativeNumbersList = string.Join(',', negativeNumbers);
+        var exceptionMessage = $"Negatives not allowed: {negativeNumbersList}";
+
+        throw new Exception(exceptionMessage);
     }
 }
