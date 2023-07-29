@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace Kata.Services;
 
 public class ReaderService : IReaderService
@@ -26,7 +28,10 @@ public class ReaderService : IReaderService
     {
         var delimiterLineLessPrefix = delimiterLine.Substring(2);
 
-        if (!delimiterLineLessPrefix.Contains('['))
+        // Unfortunately regex is the only solution I could come up with for time-being.
+        var hasMultipleDelimiters = Regex.IsMatch(delimiterLineLessPrefix, @"\[.*\]\[.*\]");
+
+        if (!hasMultipleDelimiters)
         {
             return new[] { delimiterLineLessPrefix };
         }
