@@ -80,12 +80,25 @@ public class ReaderServiceTests
         Assert.That(actual, Is.EqualTo(expected));
     }
 
-    // Aha! Found you
     [Test]
     public void GIVEN_SingleMulticharacterDelimiterEqualToMultiDelimiterSeparator_WHEN_GettingParsedNumbersFromInput_RETURNS_ParsedNumbers()
     {
         // Arrange
         var input = "//[]\n1[]2[]3";
+        var expected = new List<int> { 1, 2, 3 };
+
+        // Act
+        var actual = _readerService.GetParsedNumbersFromInput(input);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void GIVEN_SingleMulticharacterDelimiterEqualToTwoMultiDelimiterSeparator_WHEN_GettingParsedNumbersFromInput_RETURNS_ParsedNumbers()
+    {
+        // Arrange
+        var input = "//[][]\n1[][]2[][]3";
         var expected = new List<int> { 1, 2, 3 };
 
         // Act

@@ -29,7 +29,7 @@ public class ReaderService : IReaderService
         var delimiterLineLessPrefix = delimiterLine.Substring(2);
 
         // Unfortunately regex is the only solution I could come up with for time-being.
-        var hasMultipleDelimiters = Regex.IsMatch(delimiterLineLessPrefix, @"\[.*\]\[.*\]");
+        var hasMultipleDelimiters = Regex.IsMatch(delimiterLineLessPrefix, @"\[.+\]\[.+\]");
 
         if (!hasMultipleDelimiters)
         {
