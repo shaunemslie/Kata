@@ -6,8 +6,9 @@ public class ReaderService : IReaderService
     {
         var reader = new StringReader(input);
         var delimiters = new List<string> { ",", "\n" };
+        var delimiterLinePrefix = "//";
 
-        if (input.StartsWith("//"))
+        if (input.StartsWith(delimiterLinePrefix))
         {
             var delimiterLine = reader.ReadLine();
             var extractedDelimiters = GetExtractedDelimiters(delimiterLine!);

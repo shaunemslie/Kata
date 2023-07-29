@@ -29,7 +29,7 @@ public class CalculatorServiceTests
     // Check for a single character and whether it's a number or not.
     // If it's not a number, continue, otherwise return parsed number.
     [Test]
-    public void GIVEN_InputWithOneNumber_WHEN_Adding_RETURNS_Number()
+    public void GIVEN_InputWithOneNumber_WHEN_Adding_RETURNS_ParsedNumber()
     {
         // Arrange
         var input = "1";
@@ -49,10 +49,6 @@ public class CalculatorServiceTests
         var input = "1,2";
         var expected = 3;
 
-        _readerServiceMock
-            .GetParsedNumbersFromInput(Arg.Any<string>())
-            .Returns(new List<int> { 1, 2 });
-
         // Act
         var actual = _calculatorService.Add(input);
 
@@ -67,9 +63,28 @@ public class CalculatorServiceTests
         var input = "1,2,3,4,5,6,7,8";
         var expected = 36;
 
+        // Act
+        var actual = _calculatorService.Add(input);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    // TODO: Refactor Calculator class ->
+    // Could perhaps create a wrapper for the GetValidatedNumbersMethod to
+    // improve testability and readability (allows me to use the Is.LessThanOrEqualTo
+    // assertion which read better than the below equalTo. and conveys more meaning)
+    // See below brainstorm test.
+    [Test]
+    public void GIVEN_NumbersAbove1000_WHEN_Adding_RETURNS_SumOfNumbersLessThanOrEqualTo1000()
+    {
+        // Arrange
+        var input = "5,1000,1001";
+        var expected = 1005;
+
         _readerServiceMock
             .GetParsedNumbersFromInput(Arg.Any<string>())
-            .Returns(new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 });
+            .Returns(new List<int> { 5, 1000, 1001 });
 
         // Act
         var actual = _calculatorService.Add(input);
@@ -79,10 +94,12 @@ public class CalculatorServiceTests
     }
 
     [Test]
-    public void GIVEN_NumbersAbove1000_WHEN_Adding_RETURNS_SumOfNumbersLessThanOrEqualTo1000()
+    [Ignore("Ignore: brainstorm")]
+    public void GIVEN_NumbersAbove1000_WHEN_Adding_RETURNS_SumOfNumbersLessThanOrEqualTo1000_BRAINSTORM()
     {
         // Arrange
         var input = "1000,1001";
+        var expectedEqualToOrLessThan = 1000;
 
         _readerServiceMock
             .GetParsedNumbersFromInput(Arg.Any<string>())
@@ -92,7 +109,7 @@ public class CalculatorServiceTests
         var actual = _calculatorService.Add(input);
 
         // Assert
-        Assert.That(actual, Is.LessThanOrEqualTo(1000));
+        Assert.That(actual, Is.LessThanOrEqualTo(expectedEqualToOrLessThan));
     }
 
     [Test]
