@@ -2,67 +2,48 @@
 
 public class CalculatorService : ICalculatorService
 {
-    private IReaderService _readerService;
+    private readonly IReaderService _readerService;
 
-    public CalculatorService()
+    public CalculatorService(IReaderService readerService)
     {
-        _readerService = new ReaderService();
+        _readerService = readerService;
     }
 
     public int Add(string numbers)
     {
-        var numbersLessWhitespace = numbers.Trim();
-
-        if (string.IsNullOrEmpty(numbersLessWhitespace))
+        if (string.IsNullOrWhiteSpace(numbers))
         {
             return 0;
         }
 
-        var (isSingleNumber, parsedNumber) = GetCheckedIsAndParsedSingleNumber(numbersLessWhitespace);
+        var parsedNumbers = _readerService.GetParsedNumbersFromInput(numbers);
+        var validNumbers = GetValidatedNumbers(parsedNumbers);
 
-        if (isSingleNumber)
+        return Sum(validNumbers);
+    }
+
+    private int[] GetValidatedNumbers(int[] numbersToCheck)
+    {
+        var negatives = Array.FindAll(numbersToCheck, number => number < 0);
+
+        if (negatives?.Length > 0)
         {
-            return parsedNumber;
+            var exceptionList = string.Join(',', negatives);
+            var exceptionMessage = $"Negatives not allowed: {exceptionList}";
+
+            throw new Exception(exceptionMessage);
         }
 
-        var parsedNumbers = _readerService.GetParsedNumbersFromInput(numbersLessWhitespace);
-        var validNumbers = GetValidatedNumbers(parsedNumbers);
-        var sum = validNumbers.Sum();
+        var validNumbers = Array.FindAll(numbersToCheck, number => number <= 1000);
+
+        return validNumbers;
+    }
+
+    private int Sum(int[] numbers)
+    {
+        var sum = 0;
+        Array.ForEach(numbers, number => sum += number);
 
         return sum;
-    }
-
-    private IEnumerable<int> GetValidatedNumbers
-    (
-        IEnumerable<int> numbersToCheck,
-        int lowerLimitThrows = 0,
-        int upperLimitInclusive = 1000
-    )
-    {
-        var belowLowerLimit = numbersToCheck.Where(x => x < lowerLimitThrows);
-
-        if (!belowLowerLimit.Any())
-        {
-            var belowUpperLimitInclusive = numbersToCheck.Where(x => x <= upperLimitInclusive);
-            return belowUpperLimitInclusive;
-        }
-
-        var exceptionList = string.Join(',', belowLowerLimit);
-        var exceptionMessage = $"Negatives not allowed: {exceptionList}";
-
-        throw new Exception(exceptionMessage);
-    }
-
-    private (bool, int) GetCheckedIsAndParsedSingleNumber(string input)
-    {
-        if (input.Length != 1)
-        {
-            return (false, 0);
-        }
-
-        var parsedNumber = 0;
-        var isNumber = int.TryParse(input, out parsedNumber);
-
-        return (isNumber, parsedNumber);
     }
 }

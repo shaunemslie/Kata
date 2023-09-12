@@ -1,35 +1,31 @@
-using System.Text.RegularExpressions;
-
 namespace Kata.Services;
 
 public class ReaderService : IReaderService
 {
-    public IEnumerable<int> GetParsedNumbersFromInput(string input)
+    public int[] GetParsedNumbersFromInput(string numbers)
     {
-        var reader = new StringReader(input);
+        const string DelimiterLinePrefix = "//";
+        var reader = new StringReader(numbers);
         var delimiters = new List<string> { ",", "\n" };
-        var delimiterLinePrefix = "//";
 
-        if (input.StartsWith(delimiterLinePrefix))
+        if (numbers.StartsWith(DelimiterLinePrefix))
         {
-            var delimiterLine = reader.ReadLine();
-            var extractedDelimiters = GetExtractedDelimiters(delimiterLine!);
+            var delimiterLine = reader.ReadLine()!;
+            var extractedDelimiters = GetExtractedDelimiters(delimiterLine);
 
             delimiters.AddRange(extractedDelimiters);
         }
 
         var inputLessDelimiterLine = reader.ReadToEnd();
-        var numbers = GetExtractedAndParsedNumbers(inputLessDelimiterLine, delimiters);
+        var parsedNumbers = GetExtractedAndParsedNumbers(inputLessDelimiterLine, delimiters);
 
-        return numbers;
+        return parsedNumbers;
     }
 
-    private IEnumerable<string> GetExtractedDelimiters(string delimiterLine)
+    private string[] GetExtractedDelimiters(string delimiterLine)
     {
         var delimiterLineLessPrefix = delimiterLine.Substring(2);
-
-        // Unfortunately regex is the only solution I could come up with for time-being.
-        var hasMultipleDelimiters = Regex.IsMatch(delimiterLineLessPrefix, @"\[.+\]\[.+\]");
+        var hasMultipleDelimiters = delimiterLineLessPrefix.Contains('[');
 
         if (!hasMultipleDelimiters)
         {
@@ -44,14 +40,15 @@ public class ReaderService : IReaderService
         return delimiters;
     }
 
-    private IEnumerable<int> GetExtractedAndParsedNumbers(string input, List<string> delimiters)
+    private int[] GetExtractedAndParsedNumbers(string numbers, IEnumerable<string> delimiters)
     {
-        var numbers = input.Split(
+        var numbersLessDelimiters = numbers.Split(
             delimiters.ToArray(),
             StringSplitOptions.RemoveEmptyEntries
         );
+        var parsedNumbers = Array.ConvertAll<string, int>(numbersLessDelimiters, int.Parse);
 
-        return numbers.Select(int.Parse);
+        return parsedNumbers;
     }
 }
 
