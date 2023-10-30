@@ -1,7 +1,7 @@
 namespace Kata.Services;
 public class CalculatorService : ICalculatorService
 {
-    public int Sum(int[] summands)
+    public int Sum(IEnumerable<int> summands)
     {
         var sum = 0;
 

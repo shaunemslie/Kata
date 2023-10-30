@@ -1,5 +1,5 @@
 namespace Kata.Services;
 public interface ICalculatorService
 {
-    int Sum(int[] summands);
+    int Sum(IEnumerable<int> summands);
 }

@@ -23,4 +23,13 @@ public class StringReaderWrapper : IStringReaderWrapper
     {
         return _stringReader.ReadToEnd();
     }
+
+    public string ReadBlockBufferResult(int index, int count)
+    {
+        var bufferSize = count - index + 1;
+        var buffer = new char[bufferSize];
+        _stringReader.ReadBlock(buffer, index, count);
+
+        return buffer.ToString();
+    }
 }

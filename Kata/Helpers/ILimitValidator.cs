@@ -1,5 +1,5 @@
 namespace Kata.Helpers;
 public interface ILimitValidator
 {
-    void ValidateWithinLimit(int[] numbers, Predicate<int> outsideLimitMatch, string exceptionMessage);
+    void ValidateWithinLimit(IEnumerable<int> numbers, string ExceptionMessage, Predicate<int> outsideLimitMatch);
 }

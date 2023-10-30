@@ -1,5 +1,5 @@
-using System.Runtime.InteropServices;
 using Kata.Helpers;
+using Kata.Models;
 
 namespace Kata.Services;
 public class ReaderService : IReaderService
@@ -11,48 +11,83 @@ public class ReaderService : IReaderService
         _stringReaderWrapper = stringReaderWrapper;
     }
 
-    public int[] ParseNumbersFromInput(string numbers, string delimiterLinePrefix, List<string> delimiters)
+    public int[] ParseNumbersFromInput(
+        string input,
+        string DelimiterSeperatorsDefinitionIndicators,
+        string DelimitersDefinitionIndicator,
+        HashSet<string> defaultDelimiters,
+        HashSet<char> defaultSeparators)
     {
-        if (numbers.StartsWith(delimiterLinePrefix))
-        {
-            var delimitersInline = _stringReaderWrapper.ReadLine();
-            var extractedDelimiters = ExtractDelimiters(delimitersInline);
+        var separators = defaultSeparators;
 
-            delimiters.AddRange(extractedDelimiters);
+        if (input.StartsWith(DelimiterSeperatorsDefinitionIndicators.First()))
+        {
+            var extractedSeparators = ExtractDelimiterSeperators(input, DelimiterSeperatorsDefinitionIndicators);
+            separators = extractedSeparators.ToHashSet();
         }
 
-        var inputLessDelimiterLine = _stringReaderWrapper.ReadToEnd();
-        var parsedNumbers = ExtractAndParseNumbers(inputLessDelimiterLine, delimiters);
+        var delimiters = defaultDelimiters;
+
+        if (input.StartsWith(DelimitersDefinitionIndicator))
+        {
+            var extractedDelimiters = ExtractDelimiters(input, DelimitersDefinitionIndicator, separators);
+            delimiters.UnionWith(extractedDelimiters);
+        }
+
+        var parsedNumbers = ExtractParsedNumbersAndCharacters(delimiters);
 
         return parsedNumbers;
     }
 
-    // TODO:
-    private string[] ExtractDelimiters(string delimitersInline)
+    private IEnumerable<char> ExtractDelimiterSeperators(string input, IEnumerable<char> DelimiterSeperatorsDefinitionIndicators)
     {
-        var delimitersInlineLessPrefix = delimitersInline.Substring(2);
-        var hasMultipleDelimiters = delimitersInlineLessPrefix.Contains('[');
+        var delimiterSeperatorsDefinition = _stringReaderWrapper.ReadBlockBufferResult(0, 3);
 
-        if (!hasMultipleDelimiters)
-            return new string[] { delimitersInlineLessPrefix };
+        var delimiterSeperators = input.Split(
+            DelimiterSeperatorsDefinitionIndicators.ToArray(),
+            StringSplitOptions.RemoveEmptyEntries
+        );
+        var parsedSeperators = Array.ConvertAll(delimiterSeperators, Convert.ToChar);
 
-        var delimiters = delimitersInlineLessPrefix.Split(
-            new char[] { '[', ']' },
+        return parsedSeperators;
+    }
+
+    private IEnumerable<string> ExtractDelimiters(string input, string DelimiterDefinitionIndicator, IEnumerable<char> delimiterSeperators)
+    {
+        var delimitersInline = _stringReaderWrapper.ReadLine();
+
+        var delimiters = input.Split(
+            delimiterSeperators.ToArray(),
             StringSplitOptions.RemoveEmptyEntries
         );
 
         return delimiters;
     }
 
-    private int[] ExtractAndParseNumbers(string inputLessDelimiterLine, IEnumerable<string> delimiters)
+    private int[] ExtractParsedNumbersAndCharacters(IEnumerable<string> delimiters)
     {
-        var characters = inputLessDelimiterLine.Split(
+        var inputLessDefinitions = _stringReaderWrapper.ReadToEnd();
+
+        var characters = inputLessDefinitions.Split(
             delimiters.ToArray(),
             StringSplitOptions.RemoveEmptyEntries
         );
+        var parsedNumbers = new int[characters.Length];
 
-        var parsedNumbers = Array.ConvertAll(characters, int.Parse);
+        foreach (var character in characters)
+            parsedNumbers.Append(ParseCharacter(character));
 
         return parsedNumbers;
+    }
+
+    private int ParseCharacter(string character)
+    {
+        if (int.TryParse(character, out var parsedNumber))
+            return parsedNumber;
+
+        if (Character.TryParse(character, out int parsedCharacter))
+            return parsedCharacter;
+
+        return 0;
     }
 }
