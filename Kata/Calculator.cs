@@ -24,7 +24,7 @@ public class Calculator
 
         const string DelimiterSeperatorsDefinitionIndicators = "<>";
         const string DelimitersDefinitionIndicator = "//";
-        var delimiters  = new HashSet<string>() { ",", "\n" };
+        var delimiters = new HashSet<string>() { ",", "\n" };
         var separators = new HashSet<char>() { '[', ']' };
 
         var parsedSummands = _readerService.ParseNumbersFromInput(numbers, DelimiterSeperatorsDefinitionIndicators, DelimitersDefinitionIndicator, delimiters, separators);
@@ -33,7 +33,7 @@ public class Calculator
         var outsideLimitMatch = new Predicate<int>(number => number > 1000);
         _limitValidator.ValidateWithinLimit(parsedSummands, NegativesExceptionMessage, outsideLimitMatch);
 
-        var withinRange = Array.FindAll(parsedSummands, number => number <= 1000);
+        var withinRange = Array.FindAll(parsedSummands.ToArray(), number => number <= 1000);
 
         return _calculatorService.Sum(withinRange);
     }
@@ -45,7 +45,7 @@ public class Calculator
 
         const string DelimiterSeperatorsDefinitionIndicators = "<>";
         const string DelimitersDefinitionIndicator = "##";
-        var delimiters  = new HashSet<string>() { ",", "\n" };
+        var delimiters = new HashSet<string>() { ",", "\n" };
         var separators = new HashSet<char>() { '[', ']' };
 
         var parsedSubtrahends = _readerService.ParseNumbersFromInput(numbers, DelimiterSeperatorsDefinitionIndicators, DelimitersDefinitionIndicator, delimiters, separators);

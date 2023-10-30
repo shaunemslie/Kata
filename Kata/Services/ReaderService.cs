@@ -11,7 +11,7 @@ public class ReaderService : IReaderService
         _stringReaderWrapper = stringReaderWrapper;
     }
 
-    public int[] ParseNumbersFromInput(
+    public IEnumerable<int> ParseNumbersFromInput(
         string input,
         string DelimiterSeperatorsDefinitionIndicators,
         string DelimitersDefinitionIndicator,
@@ -22,7 +22,7 @@ public class ReaderService : IReaderService
 
         if (input.StartsWith(DelimiterSeperatorsDefinitionIndicators.First()))
         {
-            var extractedSeparators = ExtractDelimiterSeperators(input, DelimiterSeperatorsDefinitionIndicators);
+            var extractedSeparators = ExtractDelimiterSeperators(DelimiterSeperatorsDefinitionIndicators);
             separators = extractedSeparators.ToHashSet();
         }
 
@@ -30,7 +30,7 @@ public class ReaderService : IReaderService
 
         if (input.StartsWith(DelimitersDefinitionIndicator))
         {
-            var extractedDelimiters = ExtractDelimiters(input, DelimitersDefinitionIndicator, separators);
+            var extractedDelimiters = ExtractDelimiters(DelimitersDefinitionIndicator, separators);
             delimiters.UnionWith(extractedDelimiters);
         }
 
@@ -39,11 +39,11 @@ public class ReaderService : IReaderService
         return parsedNumbers;
     }
 
-    private IEnumerable<char> ExtractDelimiterSeperators(string input, IEnumerable<char> DelimiterSeperatorsDefinitionIndicators)
+    private IEnumerable<char> ExtractDelimiterSeperators(IEnumerable<char> DelimiterSeperatorsDefinitionIndicators)
     {
         var delimiterSeperatorsDefinition = _stringReaderWrapper.ReadBlockBufferResult(0, 3);
 
-        var delimiterSeperators = input.Split(
+        var delimiterSeperators = delimiterSeperatorsDefinition.Split(
             DelimiterSeperatorsDefinitionIndicators.ToArray(),
             StringSplitOptions.RemoveEmptyEntries
         );
@@ -52,11 +52,12 @@ public class ReaderService : IReaderService
         return parsedSeperators;
     }
 
-    private IEnumerable<string> ExtractDelimiters(string input, string DelimiterDefinitionIndicator, IEnumerable<char> delimiterSeperators)
+    private IEnumerable<string> ExtractDelimiters(string DelimiterDefinitionIndicator, IEnumerable<char> delimiterSeperators)
     {
+        _stringReaderWrapper.ReadBlockBufferResult(0, DelimiterDefinitionIndicator.Length - 1);
         var delimitersInline = _stringReaderWrapper.ReadLine();
 
-        var delimiters = input.Split(
+        var delimiters = delimitersInline.Split(
             delimiterSeperators.ToArray(),
             StringSplitOptions.RemoveEmptyEntries
         );
@@ -64,28 +65,31 @@ public class ReaderService : IReaderService
         return delimiters;
     }
 
-    private int[] ExtractParsedNumbersAndCharacters(IEnumerable<string> delimiters)
+    private IEnumerable<int> ExtractParsedNumbersAndCharacters(IEnumerable<string> delimiters)
     {
         var inputLessDefinitions = _stringReaderWrapper.ReadToEnd();
 
-        var characters = inputLessDefinitions.Split(
+        var entries = inputLessDefinitions.Split(
             delimiters.ToArray(),
             StringSplitOptions.RemoveEmptyEntries
         );
-        var parsedNumbers = new int[characters.Length];
+        var parsedNumbers = new List<int> { };
 
-        foreach (var character in characters)
-            parsedNumbers.Append(ParseCharacter(character));
+        foreach (var entry in entries)
+        {
+            var parsedNumber = ParseCharacter(entry);
+            parsedNumbers.Add(parsedNumber);
+        }
 
         return parsedNumbers;
     }
 
-    private int ParseCharacter(string character)
+    private int ParseCharacter(string entry)
     {
-        if (int.TryParse(character, out var parsedNumber))
+        if (int.TryParse(entry, out int parsedNumber))
             return parsedNumber;
 
-        if (Character.TryParse(character, out int parsedCharacter))
+        if (Character.TryParse(entry, out int parsedCharacter))
             return parsedCharacter;
 
         return 0;

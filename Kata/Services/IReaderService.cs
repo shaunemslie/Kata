@@ -1,7 +1,7 @@
 ﻿namespace Kata.Services;
 public interface IReaderService
 {
-    int[] ParseNumbersFromInput(
+    IEnumerable<int> ParseNumbersFromInput(
         string input,
         string DelimiterSeperatorsDefinitionIndicators,
         string DelimitersDefinitionIndicator,

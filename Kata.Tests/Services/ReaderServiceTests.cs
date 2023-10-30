@@ -1,17 +1,24 @@
 namespace Kata.Tests.Services;
 public class ReaderServiceTests
 {
-    const string AdditionDelimiterLinePrefix = "//";
-    const string SubtractionDelimiterLinePrefix = "##";
+    const string DelimiterSeperatorsDefinitionIndicators = "<>";
+    const string AddDelimitersDefinitionIndicator = "//";
+    const string SubDelimitersDefinitionIndicator = "##";
 
-    private List<string> _delimiters;
+    private HashSet<string> _addDefaultDelimiters;
+    private HashSet<string> _subDefaultDelimiters;
+    private HashSet<char> _defaultSeparators;
+
     private IStringReaderWrapper _stringReaderWrapperMock;
     private IReaderService _readerService;
 
     [SetUp]
     public void Setup()
     {
-        _delimiters = new List<string> { ",", "\n" };
+        _addDefaultDelimiters = new HashSet<string> { ",", "\n" };
+        _subDefaultDelimiters = new HashSet<string> { ",", "\n" };
+        _defaultSeparators = new HashSet<char> { '[', ']' };
+
         _stringReaderWrapperMock = Substitute.For<IStringReaderWrapper>();
         _readerService = new ReaderService(_stringReaderWrapperMock);
     }
@@ -26,7 +33,7 @@ public class ReaderServiceTests
         _stringReaderWrapperMock.ReadToEnd().Returns(input);
 
         // Act
-        var actual = _readerService.ParseNumbersFromInput(input, AdditionDelimiterLinePrefix, _delimiters);
+        var actual = _readerService.ParseNumbersFromInput(input, DelimiterSeperatorsDefinitionIndicators, AddDelimitersDefinitionIndicator, _addDefaultDelimiters, _defaultSeparators);
 
         // Assert
         Assert.That(actual, Is.EqualTo(expected));
