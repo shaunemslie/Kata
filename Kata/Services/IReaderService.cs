@@ -1,5 +1,5 @@
 ﻿namespace Kata.Services;
 public interface IReaderService
 {
-    int[] GetParsedSummandsFromInput(string numbers);
+    int[] ParseNumbersFromInput(string numbers, string delimiterLinePrefix, List<string> delimiters);
 }

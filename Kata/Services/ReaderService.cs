@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Kata.Helpers;
 
 namespace Kata.Services;
@@ -10,34 +11,30 @@ public class ReaderService : IReaderService
         _stringReaderWrapper = stringReaderWrapper;
     }
 
-    public int[] GetParsedSummandsFromInput(string numbers)
+    public int[] ParseNumbersFromInput(string numbers, string delimiterLinePrefix, List<string> delimiters)
     {
-        const string DelimiterLinePrefix = "//";
-        var delimiters = new List<string> { ",", "\n" };
-
-        if (numbers.StartsWith(DelimiterLinePrefix))
+        if (numbers.StartsWith(delimiterLinePrefix))
         {
             var delimitersInline = _stringReaderWrapper.ReadLine();
-            var extractedDelimiters = GetExtractedDelimiters(delimitersInline);
+            var extractedDelimiters = ExtractDelimiters(delimitersInline);
 
             delimiters.AddRange(extractedDelimiters);
         }
 
         var inputLessDelimiterLine = _stringReaderWrapper.ReadToEnd();
-        var parsedSummands = GetExtractedAndParsedSummands(inputLessDelimiterLine, delimiters);
+        var parsedNumbers = ExtractAndParseNumbers(inputLessDelimiterLine, delimiters);
 
-        return parsedSummands;
+        return parsedNumbers;
     }
 
-    private string[] GetExtractedDelimiters(string delimitersInline)
+    // TODO:
+    private string[] ExtractDelimiters(string delimitersInline)
     {
         var delimitersInlineLessPrefix = delimitersInline.Substring(2);
         var hasMultipleDelimiters = delimitersInlineLessPrefix.Contains('[');
 
         if (!hasMultipleDelimiters)
-        {
             return new string[] { delimitersInlineLessPrefix };
-        }
 
         var delimiters = delimitersInlineLessPrefix.Split(
             new char[] { '[', ']' },
@@ -47,14 +44,15 @@ public class ReaderService : IReaderService
         return delimiters;
     }
 
-    private int[] GetExtractedAndParsedSummands(string inputLessDelimiterLine, IEnumerable<string> delimiters)
+    private int[] ExtractAndParseNumbers(string inputLessDelimiterLine, IEnumerable<string> delimiters)
     {
-        var summands = inputLessDelimiterLine.Split(
+        var characters = inputLessDelimiterLine.Split(
             delimiters.ToArray(),
             StringSplitOptions.RemoveEmptyEntries
         );
-        var parsedSummands = Array.ConvertAll<string, int>(summands, int.Parse);
 
-        return parsedSummands;
+        var parsedNumbers = Array.ConvertAll(characters, int.Parse);
+
+        return parsedNumbers;
     }
 }

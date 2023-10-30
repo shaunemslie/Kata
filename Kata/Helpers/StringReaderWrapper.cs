@@ -8,6 +8,12 @@ public class StringReaderWrapper : IStringReaderWrapper
         _stringReader = stringReader;
     }
 
+    ~StringReaderWrapper()
+    {
+        _stringReader.Close();
+        _stringReader.Dispose();
+    }
+
     public string ReadLine()
     {
         return _stringReader.ReadLine();
