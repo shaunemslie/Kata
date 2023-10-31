@@ -1,13 +1,8 @@
 namespace Kata.Tests.Services;
 public class ReaderServiceTests
 {
-    const string DelimiterSeperatorsDefinitionIndicators = "<>";
-    const string AddDelimitersDefinitionIndicator = "//";
-    const string SubDelimitersDefinitionIndicator = "##";
-
-    private HashSet<string> _addDefaultDelimiters;
-    private HashSet<string> _subDefaultDelimiters;
-    private HashSet<char> _defaultSeparators;
+    const string SeparatorsDefinitionClosure = "<>";
+    const string DelimitersDefinitionPrefix = "//";
 
     private IStringReaderWrapper _stringReaderWrapperMock;
     private IReaderService _readerService;
@@ -15,10 +10,6 @@ public class ReaderServiceTests
     [SetUp]
     public void Setup()
     {
-        _addDefaultDelimiters = new HashSet<string> { ",", "\n" };
-        _subDefaultDelimiters = new HashSet<string> { ",", "\n" };
-        _defaultSeparators = new HashSet<char> { '[', ']' };
-
         _stringReaderWrapperMock = Substitute.For<IStringReaderWrapper>();
         _readerService = new ReaderService(_stringReaderWrapperMock);
     }
@@ -30,10 +21,38 @@ public class ReaderServiceTests
         var input = "1";
         var expected = new int[] { 1 };
 
+        var defaultDelimiters = new HashSet<string> { ",", "\n" };
+        var defaultSeparators = new HashSet<char> { '[', ']' };
+
         _stringReaderWrapperMock.ReadToEnd().Returns(input);
 
         // Act
-        var actual = _readerService.ParseNumbersFromInput(input, DelimiterSeperatorsDefinitionIndicators, AddDelimitersDefinitionIndicator, _addDefaultDelimiters, _defaultSeparators);
+        var actual = _readerService.ParseNumbersFromInput(input, SeparatorsDefinitionClosure, DelimitersDefinitionPrefix, defaultDelimiters, defaultSeparators);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void Given_ReturnsParsedInput()
+    {
+        // Arrange
+        var input = "<(>)//(*)\n1*2";
+        var expected = new List<int> { 1, 2 };
+
+        var defaultDelimiters = new HashSet<string> { ",", "\n" };
+        var defaultSeparators = new HashSet<char> { '[', ']' };
+
+        _stringReaderWrapperMock.Peek().Returns(60, 47);
+        var separatorsDefinition = "<(>)";
+        _stringReaderWrapperMock.ReadBlockBufferResult(0, 4).Returns(separatorsDefinition);
+        var delimitersInline = "(*)";
+        _stringReaderWrapperMock.ReadLine().Returns(delimitersInline);
+        var inputLessDefinitions = "1*2";
+        _stringReaderWrapperMock.ReadToEnd().Returns(inputLessDefinitions);
+
+        // Act
+        var actual = _readerService.ParseNumbersFromInput(input, SeparatorsDefinitionClosure, DelimitersDefinitionPrefix, defaultDelimiters, defaultSeparators);
 
         // Assert
         Assert.That(actual, Is.EqualTo(expected));

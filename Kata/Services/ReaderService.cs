@@ -19,16 +19,24 @@ public class ReaderService : IReaderService
         HashSet<char> defaultSeparators)
     {
         var separators = defaultSeparators;
+        var determinatorExtractSeparators = _stringReaderWrapper.Peek();
 
-        if (input.StartsWith(DelimiterSeperatorsDefinitionIndicators.First()))
+        var shouldExtractSeparators = determinatorExtractSeparators != -1 &&
+            determinatorExtractSeparators == (int)DelimiterSeperatorsDefinitionIndicators.First();
+
+        if (shouldExtractSeparators)
         {
             var extractedSeparators = ExtractDelimiterSeperators(DelimiterSeperatorsDefinitionIndicators);
             separators = extractedSeparators.ToHashSet();
         }
 
         var delimiters = defaultDelimiters;
+        var determinatorExtractDelimiters = _stringReaderWrapper.Peek();
 
-        if (input.StartsWith(DelimitersDefinitionIndicator))
+        var shouldExtractDelimiters = determinatorExtractDelimiters != -1 &&
+            determinatorExtractDelimiters == (int)DelimitersDefinitionIndicator.First();
+
+        if (shouldExtractDelimiters)
         {
             var extractedDelimiters = ExtractDelimiters(DelimitersDefinitionIndicator, separators);
             delimiters.UnionWith(extractedDelimiters);
@@ -41,7 +49,7 @@ public class ReaderService : IReaderService
 
     private IEnumerable<char> ExtractDelimiterSeperators(IEnumerable<char> DelimiterSeperatorsDefinitionIndicators)
     {
-        var delimiterSeperatorsDefinition = _stringReaderWrapper.ReadBlockBufferResult(0, 3);
+        var delimiterSeperatorsDefinition = _stringReaderWrapper.ReadBlockBufferResult(0, 4);
 
         var delimiterSeperators = delimiterSeperatorsDefinition.Split(
             DelimiterSeperatorsDefinitionIndicators.ToArray(),
@@ -54,7 +62,7 @@ public class ReaderService : IReaderService
 
     private IEnumerable<string> ExtractDelimiters(string DelimiterDefinitionIndicator, IEnumerable<char> delimiterSeperators)
     {
-        _stringReaderWrapper.ReadBlockBufferResult(0, DelimiterDefinitionIndicator.Length - 1);
+        _stringReaderWrapper.ReadBlockBufferResult(0, DelimiterDefinitionIndicator.Length);
         var delimitersInline = _stringReaderWrapper.ReadLine();
 
         var delimiters = delimitersInline.Split(
@@ -89,8 +97,8 @@ public class ReaderService : IReaderService
         if (int.TryParse(entry, out int parsedNumber))
             return parsedNumber;
 
-        if (Character.TryParse(entry, out int parsedCharacter))
-            return parsedCharacter;
+        if (Enum.TryParse(entry, true, out Character parsedCharacter))
+            return (int)parsedCharacter;
 
         return 0;
     }

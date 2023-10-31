@@ -6,14 +6,12 @@ public class Calculator
 {
     private readonly IReaderService _readerService;
     private readonly ICalculatorService _calculatorService;
-
     private readonly ILimitValidator _limitValidator;
 
     public Calculator(IReaderService readerService, ICalculatorService calculatorService, ILimitValidator limitValidator)
     {
         _readerService = readerService;
         _calculatorService = calculatorService;
-
         _limitValidator = limitValidator;
     }
 
@@ -30,7 +28,7 @@ public class Calculator
         var parsedSummands = _readerService.ParseNumbersFromInput(numbers, DelimiterSeperatorsDefinitionIndicators, DelimitersDefinitionIndicator, delimiters, separators);
 
         const string NegativesExceptionMessage = "Negative numbers are prohibited: ";
-        var outsideLimitMatch = new Predicate<int>(number => number > 1000);
+        var outsideLimitMatch = new Predicate<int>(number => int.IsNegative(number));
         _limitValidator.ValidateWithinLimit(parsedSummands, NegativesExceptionMessage, outsideLimitMatch);
 
         var withinRange = Array.FindAll(parsedSummands.ToArray(), number => number <= 1000);
