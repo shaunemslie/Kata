@@ -19,6 +19,11 @@ public class StringReaderWrapper : IStringReaderWrapper
         return (int)_stringReader.Peek();
     }
 
+    public int Read()
+    {
+        return _stringReader.Read();
+    }
+
     public string ReadLine()
     {
         return _stringReader.ReadLine();
@@ -29,12 +34,12 @@ public class StringReaderWrapper : IStringReaderWrapper
         return _stringReader.ReadToEnd();
     }
 
-    public string ReadBlockBufferResult(int index, int count)
+    public char[] ReadBlockBufferResult(int index, int count)
     {
         var bufferSize = count - index;
         var buffer = new char[bufferSize];
         _stringReader.ReadBlock(buffer, index, count);
 
-        return buffer.ToString();
+        return buffer;
     }
 }

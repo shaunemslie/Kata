@@ -2,7 +2,8 @@ namespace Kata.Helpers;
 public interface IStringReaderWrapper
 {
     int Peek();
+    int Read();
     string ReadLine();
     string ReadToEnd();
-    string ReadBlockBufferResult(int index, int count);
+    char[] ReadBlockBufferResult(int index, int count);
 }

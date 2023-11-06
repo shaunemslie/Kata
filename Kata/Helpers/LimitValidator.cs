@@ -1,9 +1,9 @@
 namespace Kata.Helpers;
 public class LimitValidator : ILimitValidator
 {
-    public void ValidateWithinLimit(IEnumerable<int> numbers, string ExceptionMessage, Predicate<int> outsideLimitMatch)
+    public void ValidateWithinLimit(int[] numbers, string ExceptionMessage, Predicate<int> outsideLimitMatch)
     {
-        var numbersOutsideLimit = Array.FindAll(numbers.ToArray(), outsideLimitMatch);
+        var numbersOutsideLimit = Array.FindAll(numbers, outsideLimitMatch);
 
         if (numbersOutsideLimit.Length != 0)
             throw new LimitException(ExceptionMessage, numbersOutsideLimit);
